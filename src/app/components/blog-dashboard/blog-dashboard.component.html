@@ -1,0 +1,132 @@
+<div style="position: fixed;width: 100%;background-color: white;top: 6%">
+    <div style="top: 100px;background-size: 1300px 10px;">
+        <img src="/assets/images/blog.jpg" alt="blog" style="width: 100%;height: 250px;" />
+    </div>
+    <div class="tab">
+        <button class="tablinks" (click)="openTab('all-blogs')" [ngClass]="activetab=='all-blogs'?'active-tab':''">All
+            blogs</button>
+        <button class="tablinks" (click)="openTab('my-blogs')" [ngClass]="activetab=='my-blogs'?'active-tab':''">My
+            blogs</button>
+        <button class="tablinks" type="button" (click)="openPopup('add-blog')"
+            [ngClass]="activetab=='add-blog'?'active-tab':''">Add blog</button>
+    </div>
+    <hr style="margin-top: 3%;">
+    <div *ngIf="activetab=='all-blogs'" style="margin-bottom: 1%;">
+        <div *ngIf="allBlogs?.length" style="display: flex;padding-inline: 2%;margin-top: 2%;margin-left: 10%;">
+            <input type="search" style="width: 20%;" class="form-control" placeholder="Search" name="search"
+                [(ngModel)]="search" />
+            <input type="date" class="form-control date-search" name="fromDate" [(ngModel)]="fromDate" />
+            <input type="date" class="form-control date-search" name="toDate" [(ngModel)]="toDate" />
+            <button type="button" style="margin-left: 2%" class="btn btn-primary" (click)="searchBlogs()">Search
+            </button>
+        </div>
+    </div>
+</div>
+<div class="modal" tabindex="-1" role="dialog" [ngStyle]="{'display':displayStyle}" style="margin-top: 18%; height: 240px;">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Add your blog</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-signin" [formGroup]="blog" autocomplete="off" (submit)="onSubmit()">
+                    <fieldset class="clearfix">
+                        <div class="row">
+                            <div class="col-md-10">
+                                <label for="blogName">Blog name</label><br>
+                                <input style="border-radius: 10px;" type="blogName" class="form-control"
+                                    formControlName="blogName" />
+                                <div class="validationMsg">
+                                    <small class="text-danger" *ngIf="
+                                  blog.get('blogName')?.touched &&
+                                  blog.get('blogName')?.errors?.required
+                                ">
+                                        blogName is mandatory</small>
+                                    <small class="text-danger" *ngIf="
+                                  blog.get('blogName')?.touched &&
+                                  blog.get('blogName')?.errors?.minlength
+                                ">Maximum 20 characters required</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row" style="margin-top: 5px;">
+                            <div class="col-md-10">
+                                <label for="category">Category</label><br>
+                                <input style="border-radius: 10px" type="text" class="form-control"
+                                    formControlName="category" />
+                                <div class="validationMsg">
+                                    <small class="text-danger" *ngIf="
+                                  blog.get('category')?.touched &&
+                                  blog.get('category')?.errors?.required
+                                ">
+                                        category is mandatory</small>
+                                    <small class="text-danger" *ngIf="
+                                        blog.get('category')?.touched &&
+                                        blog.get('category')?.errors?.minlength
+                                      ">Maximum 20 characters required</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row" style="margin-top: 5px;">
+                            <div class="col-md-10">
+                                <label for="authorName">Author name</label><br>
+                                <input style="border-radius: 10px" type="text" class="form-control"
+                                    formControlName="authorName" />
+                                <div class="validationMsg">
+                                    <small class="text-danger" *ngIf="
+                                  blog.get('authorName')?.touched &&
+                                  blog.get('authorName')?.errors?.required
+                                ">
+                                        Author name is mandatory</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row" style="margin-top: 5px;">
+                            <div class="col-md-10">
+                                <label for="article">Article</label><br>
+                                <textarea style="border-radius: 10px" type="article" class="form-control"
+                                    formControlName="article"></textarea>
+                                <div class="validationMsg">
+                                    <small class="text-danger" *ngIf="
+                                  blog.get('article')?.touched &&
+                                  blog.get('article')?.errors?.required
+                                ">
+                                        article is mandatory</small>
+                                    <small class="text-danger" *ngIf="
+                                  blog.get('article')?.touched &&
+                                  blog.get('article')?.errors?.maxlength
+                                ">Maximum 1000 characters allowed</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row" style="margin-top: 10px;">
+                            <div class="col-md-5">
+                                <button class="btn btn-outline-primary" data-dismiss="modal" type="submit"
+                                    id="add-employee-form" [disabled]="!blog.valid">
+                                    Save blog
+                                </button>
+                            </div>
+                        </div>
+                    </fieldset>
+                </form>
+
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" (click)="closePopup()">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div style="margin-top: 25%;">
+    <div [ngSwitch]="activetab">
+        <div *ngSwitchCase="'all-blogs'"><view-blogs [blogs]="allBlogs" (selectedTab)="refreshData()"></view-blogs>
+        </div>
+        <div *ngSwitchCase="'my-blogs'"><view-my-blogs></view-my-blogs></div>
+    </div>
+
+</div>
